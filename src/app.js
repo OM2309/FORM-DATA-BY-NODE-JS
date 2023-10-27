@@ -2,7 +2,8 @@ const express = require("express");
 const app = express();
 const path = require("path");
 const port = process.env.PORT || 5000;
-const db = require("./db/conn");
+// Running the database file and connecting to the database server
+const db = require("./db/conn"); // Just write require("./db/conn")
 const Student = require("./models/registers");
 const hbs = require("hbs");
 
@@ -28,12 +29,15 @@ app.get("/register", (req, res) => {
 
 app.post("/register", async (req, res) => {
   try {
+    // This is from view of input field name attribute - password
     const password = req.body.password;
     const cpassword = req.body.confirmpassword;
 
     if (password === cpassword) {
       const newStudent = new Student({
-        firstname: req.body.firstname,
+        // keys are from the database schema/columns
+        // firstname->Database: req.body.firstLetterName->input
+        firstname: req.body.firstLetterName,
         lastname: req.body.lastname,
         email: req.body.email,
         gender: req.body.gender,
@@ -41,13 +45,10 @@ app.post("/register", async (req, res) => {
         age: req.body.age,
         password: req.body.password,
         confirmpassword: req.body.confirmpassword,
-
       });
 
-
       const registerd = await newStudent.save();
-
-
+      res.redirect('/');
     } else {
       res.send("Passwords do not match");
     }
